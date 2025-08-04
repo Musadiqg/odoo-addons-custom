@@ -1,0 +1,163 @@
+.twilio-chatter-call-icon img{
+    width: 25px
+    }
+.twilio-chatter-call-icon{
+    cursor: pointer;
+    padding: 3px 2px 2px 5px;
+    }
+.twilio-chatter-call-icon:hover{
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+    border-radius: 50%;
+    padding: 3px 2px 2px 5px;
+    }
+.twilio-module-footer{
+    grid-area: core-footer;
+    margin-top: 5px;
+    }
+.twilio-success-connect-msg {
+    padding: 3px 5px;
+    color: #fff;
+    background: green;
+    display: none;
+    }
+.twilio-error-connect-msg {
+    padding: 3px 5px;
+    color: #fff;
+    background: red;
+    display: none;
+    }
+.twilio-calling {
+    background: black;
+    color: white;
+    border-radius: 10px;
+    padding: 5px 10px;
+    display: none;
+    }
+.twilio-calling-to {
+    text-align: center;
+    font-size: 16px;
+    }
+.twilio-hangup {
+    text-align: center;
+    font-size: 16px;
+    width: 80px;
+    vertical-align: middle;
+    padding: 28px 0px;
+    border-radius: 50%;
+    background: red;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 50px;
+    }
+.twilio-calling-to span.twilio-connected{
+    display: none;
+    }
+.twilio-calling-to.twilio-call-connected span.twilio-connected{
+    display: block;
+    }
+.o_Chatter .twilio-chatter-call-icon, .hide-twilio-wrapper-class{
+    display: none !important;
+}
+.twilio-wrapper-class-img {
+    width: 25px;
+    position: relative;
+    top: -3px;
+    cursor: pointer;
+}
+.twilio-wrapper-class-img img {
+    width: 25px;
+}
+span.message-twilio-call-information {
+    border: 1px solid #9a9999;
+    display: block;
+    border-radius: 7px;
+    padding: 5px;
+    font-size: 13px;
+}
+span.twilio-call-duration {
+    font-weight: bold;
+}
+.twilio-module-footer .buttons-wrapper{
+    margin: 10px auto 0;
+    float: none;
+    width: 140px;
+    }
+.twilio-open-dialpad{
+    float: left;
+    font-size: 35px;
+    margin-top: 13px;
+    cursor: pointer;
+    }
+.twilio-open-dialpad:hover{
+    color: green;
+    }
+.twilio-send-digit-dialpad {
+    width: 240px;
+    height: 70px;
+    margin: 10px auto 0;
+    display: none;
+    }
+.send-digit {
+    float: left;
+    cursor: pointer;
+    border: 2px solid;
+    width: 30px;
+    text-align: center;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 50%;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    }
+.send-digit:hover {
+    border: 2px solid green;
+}
+
+.tw-incoming-call-alert.tw-incoming-call {
+    display: block !important;
+}
+.tw-incoming-call-alert {
+    display: none !important;
+    position: absolute !important;
+    top: 50px;
+    right: 40%;
+    padding: 20px;
+    z-index: 1050;
+    background: #000 !important;
+    height: 140px !important;
+}
+.tw-incoming-call-alert .twilio-incoming-caller-details {
+    margin-bottom: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+.tw-incoming-call-alert .incoming-call-alert-wraper {
+    float: none;
+    margin: 0px auto;
+    width: 260px;
+}
+.tw-incoming-call-alert .twilio-incoming-answer {
+    width: 120px;
+    float: left;
+    background: #0e9b0e;
+    font-size: 20px;
+    border-radius: 20px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 0px;
+}
+.tw-incoming-call-alert .twilio-incoming-reject {
+    width: 120px;
+    float: right;
+    font-size: 20px;
+    background: #ff4141;
+    border-radius: 20px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 0px;
+}

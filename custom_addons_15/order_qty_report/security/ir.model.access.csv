@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_order_qty_report,order.qty.report,model_order_qty_report,base.group_user,1,1,1,1
+access_order_po_qty_report,order.po.qty.report,model_order_po_qty_report,base.group_user,1,1,1,1

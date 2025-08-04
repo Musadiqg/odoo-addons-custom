@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <!-- Journal Items – extra columns & header -->
+    <record id="account_move_line_list" model="ir.ui.view">
+      <field name="name">account.move.line.list</field>
+      <field name="model">account.move.line</field>
+      <field name="type">list</field>
+      <field name="inherit_id" ref="account.view_move_line_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//list" position="attributes">
+          //<attribute name="js_class">account_move_line_list</attribute>
+        </xpath>
+        <xpath expr="//list" position="inside">
+          <header>
+            <button name="action_reconcile" type="object" string="Reconcile"
+                    groups="account.group_account_user" data-hotkey="r"/>
+          </header>
+          <field name="is_account_reconcile" column_invisible="True"/>
+          <field name="has_deferred_moves"   column_invisible="True"/>
+        </xpath>
+        <xpath expr="//list/field[@name='name']" position="after">
+          <field name="deferred_start_date" optional="hide" readonly="has_deferred_moves"/>
+          <field name="deferred_end_date"   optional="hide" readonly="has_deferred_moves"/>
+        </xpath>
+        <xpath expr="//list/field[@name='matching_number']" position="attributes">
+          <attribute name="widget">matching_link_widget</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Account move form -->
+
+<!-- Account move form - REPLACE THIS ENTIRE RECORD -->
+    <record id="view_move_form_lc_sub_partner" model="ir.ui.view">
+      <field name="name">account.move.form.lc</field>
+      <field name="model">account.move</field>
+      <field name="inherit_id" ref="account.view_move_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='ref']" position="after">
+          <field name="many" invisible="1"/>
+          <field name="clearing_code_many" widget="many2many_tags" invisible="many == False" />
+          <field name="clearing_code" readonly="state != 'draft'" invisible="many != False" options="{'no_create': True, 'no_open': True}" />
+        </xpath>
+
+        <xpath expr="//field[@name='partner_bank_id']" position="after">
+          <field name="sub_partner" invisible="move_type in ('out_invoice', 'out_refund')" />
+        </xpath>
+
+        <!-- insert custom columns before partner_id inside the inner list -->
+        <xpath expr="//notebook//page/field[@name='line_ids']/list/field[@name='partner_id']"
+               position="before">
+          <field name="sub_partner_line"
+                 column_invisible="parent.move_type in ('out_invoice', 'out_refund')"/>
+          <field name="clearing_code"
+                 column_invisible="parent.move_type in ('out_invoice', 'out_refund')"/>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Journal‑item search (full copy of the original, so other inherits still work) -->
+    <record id="account.view_account_move_line_filter" model="ir.ui.view">
+      <field name="name">account.move.line.search</field>
+      <field name="model">account.move.line</field>
+      <field name="arch" type="xml">
+        <search string="Search Journal Items">
+          <field name="name" string="Journal Item"
+                 filter_domain="['|','|','|',('name','ilike',self),('ref','ilike',self),('account_id','ilike',self),('partner_id','ilike',self)]"/>
+          <field name="date"/>
+          <field name="account_id"/>
+          <field name="account_root_id"/>
+          <field name="account_type"/>
+          <field name="partner_id"/>
+          <field name="journal_id"/>
+          <field name="move_id" string="Journal Entry"
+                 filter_domain="['|','|',('move_id.name','ilike',self),('move_id.ref','ilike',self),('move_id.partner_id','ilike',self)]"/>
+          <field name="tax_ids"/>
+          <field name="tax_line_id" string="Originator Tax"/>
+          <field name="clearing_code"/>
+          <field name="sub_partner_line"/>
+          <field name="reconcile_model_id"/>
+          <separator/>
+          <filter string="Unposted" name="unposted" domain="[('parent_state','=','draft')]" help="Unposted Journal Items"/>
+          <filter string="Posted"   name="posted"   domain="[('parent_state','=','posted')]" help="Posted Journal Items"/>
+          <separator/>
+          <filter string="To Check" name="to_check" domain="[('move_id.checked','=',False)]"/>
+          <separator/>
+          <filter string="Unreconciled" name="unreconciled"
+                  domain="[('full_reconcile_id','=',False),('balance','!=',0),('account_id.reconcile','=',True)]"
+                  help="Journal items where matching number isn't set"/>
+          <separator/>
+          <filter string="Sales"        name="sales"     domain="[('journal_id.type','=','sale')]"     context="{'default_journal_type':'sale'}"/>
+          <filter string="Purchases"    name="purchases" domain="[('journal_id.type','=','purchase')]" context="{'default_journal_type':'purchase'}"/>
+          <filter string="Bank"         name="bank"      domain="[('journal_id.type','=','bank')]"     context="{'default_journal_type':'bank'}"/>
+          <filter string="Cash"         name="cash"      domain="[('journal_id.type','=','cash')]"     context="{'default_journal_type':'cash'}"/>
+          <filter string="Miscellaneous" name="misc_filter" domain="[('journal_id.type','=','general')]" context="{'default_journal_type':'general'}"/>
+          <separator/>
+          <filter string="Payable"    name="payable"    domain="[('account_id.account_type','=','payable')]"    help="From Payable accounts"/>
+          <filter string="Receivable" name="receivable" domain="[('account_id.account_type','=','receivable')]" help="From Receivable accounts"/>
+          <separator/>
+          <filter string="Date" name="date" date="date"/>
+          <separator/>
+          <group expand="0" string="Group By">
+            <filter string="Journal Entry" name="group_by_move"    domain="[]" context="{'group_by':'move_id'}"/>
+            <filter string="Account"       name="group_by_account" domain="[]" context="{'group_by':'account_id'}"/>
+            <filter string="Partner"       name="group_by_partner" domain="[]" context="{'group_by':'partner_id'}"/>
+            <filter string="Journal"       name="journal"          domain="[]" context="{'group_by':'journal_id'}"/>
+            <filter string="Date"          name="groupby_date"     domain="[]" context="{'group_by':'date'}"/>
+            <filter string="Clearing Code" name="groupby_code"     domain="[]" context="{'group_by':'clearing_code'}"/>
+            <filter string="Sub‑Partner"   name="groupby_sub_partner_line" domain="[]" context="{'group_by':'sub_partner_line'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- Core list view replacement -->
+    <record id="account.view_move_line_tree" model="ir.ui.view">
+      <field name="name">account.move.line.list</field>
+      <field name="model">account.move.line</field>
+      <field name="type">list</field>
+      <field eval="100" name="priority"/>
+      <field name="arch" type="xml">
+        <list string="Journal Items" create="false" edit="false" sample="1">
+          <field name="date" optional="show"/>
+          <field name="company_id" groups="base.group_multi_company"/>
+          <field name="journal_id" options='{"no_open":True}'/>
+          <field name="move_id" optional="show"/>
+          <field name="clearing_code" optional="show"/>
+          <field name="sub_partner_line" optional="show"/>
+          <field name="account_id" options="{'no_open': True}" groups="account.group_account_readonly"/>
+          <field name="partner_id" optional="show"/>
+          <field name="analytic_distribution" widget="analytic_distribution"
+                 groups="analytic.group_analytic_accounting" optional="show"/>
+          <field name="statement_id" invisible="1"/>
+          <field name="ref" optional="show"/>
+          <field name="name" optional="show"/>
+          <field name="tax_ids" widget="many2many_tags" width="0.5" optional="show"/>
+          <field name="debit"  sum="Total Debit"/>
+          <field name="credit" sum="Total Credit"/>
+          <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
+          <field name="currency_id" readonly="1" groups="base.group_multi_currency"
+                 optional="hide" string="Original Currency"/>
+          <field name="tax_tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
+          <field name="matching_number" optional="show"/>
+          <field name="reconcile_model_id" invisible="1"/>
+          <field name="reconciled" invisible="1"/>
+          <field name="date_maturity" optional="hide"/>
+          <field name="company_currency_id" invisible="1"/>
+          <field name="parent_state" invisible="1"/>
+        </list>
+      </field>
+    </record>
+
+    <!-- Purchase‑order KPI tree -->
+    <record id="purchase_order_branch_view_tree1_inherit" model="ir.ui.view">
+      <field name="name">purchase.order.kpis.tree.inherit.clearing_code</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+      <field name="arch" type="xml">
+        <field name="company_id" position="before">
+          <field name="clearing_code" optional="show"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- Purchase‑order main tree -->
+    <record id="purchase_order_branch_view_tree_inherit" model="ir.ui.view">
+      <field name="name">purchase.order.tree.inherit.clearing_code</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+      <field name="arch" type="xml">
+        <field name="company_id" position="before">
+          <field name="clearing_code" optional="show"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- Stock picking form -->
+    <record id="view_picking_form_inherit_lc" model="ir.ui.view">
+      <field name="name">delivery.stock.picking_lc.form.view</field>
+      <field name="model">stock.picking</field>
+      <field name="inherit_id" ref="stock.view_picking_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='origin']" position="after">
+          <field name="clearing_code" readonly="state != 'draft'" />
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Account payment form -->
+    <record id="view_account_payment_form_inherit_payment_clearing_code" model="ir.ui.view">
+      <field name="name">view.account.payment.form.inherit.payment.code</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='date']" position="after">
+          <field name="clearing_code" invisible="many != False" options="{'no_create': True, 'no_open': True}" />
+          <field name="many" invisible="1"/>
+          <field name="clearing_code_many" widget="many2many_tags" invisible="many == False" />
+        </xpath>
+      </field>
+    </record>
+
+    <!-- Purchase‑order search (unchanged functional logic) -->
+    <record id="purchase.purchase_order_view_search" model="ir.ui.view">
+      <field name="name">purchase.order.select</field>
+      <field name="model">purchase.order</field>
+      <field name="arch" type="xml">
+        <search string="Search Purchase Order">
+          <field name="name" string="Order"
+                 filter_domain="['|','|',('name','ilike',self),('partner_ref','ilike',self),('partner_id','child_of',self)]"/>
+          <field name="partner_id" operator="child_of"/>
+          <field name="user_id"/>
+          <field name="product_id"/>
+          <field name="clearing_code"/>
+          <filter name="my_Orders" string="My Orders" domain="[('user_id','=',uid)]"/>
+          <filter string="Starred" name="starred" domain="[('priority','=','1')]"/>
+          <separator/>
+          <filter name="unconfirmed" string="Not Acknowledged"
+                  domain="[('mail_reception_confirmed','=',False),('state','=','purchase')]"/>
+          <filter name="not_invoiced" string="Waiting Bills"
+                  domain="[('invoice_status','=','to invoice')]" help="Purchase orders that include lines not invoiced."/>
+          <filter name="invoiced" string="Bills Received"
+                  domain="[('invoice_status','=','invoiced')]" help="Purchase orders that have been invoiced."/>
+          <separator/>
+          <filter name="order_date" string="Order Date" date="date_order"/>
+          <separator/>
+          <filter invisible="1" string="Late Activities" name="activities_overdue"
+                  domain="[('my_activity_date_deadline','&lt;',context_today().strftime('%Y-%m-%d'))]"
+                  help="Show all records which has next action date is before today"/>
+          <filter invisible="1" string="Today Activities" name="activities_today"
+                  domain="[('my_activity_date_deadline','=',context_today().strftime('%Y-%m-%d'))]"/>
+          <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                  domain="[('my_activity_date_deadline','&gt;',context_today().strftime('%Y-%m-%d'))]"/>
+          <separator/>
+          <filter string="Warnings" name="activities_exception"
+                  domain="[('activity_exception_decoration','!=',False)]"/>
+          <group expand="0" string="Group By">
+            <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+            <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
+            <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- Account‑move search (clearing code) -->
+    <record id="view_account_payment_search_inherit_account_move_lc_import_xx" model="ir.ui.view">
+      <field name="name">account.move.filter.lc_import_xx</field>
+      <field name="model">account.move</field>
+      <field name="inherit_id" ref="account.view_account_move_filter"/>
+      <field name="arch" type="xml">
+        <field name="journal_id" position="after">
+          <field name="many" invisible="0"/>
+          <field name="clearing_code" invisible="many != False" options="{'no_create': True, 'no_open': True}" />
+          <field name="clearing_code_many" widget="many2many_tags" invisible="many == False" />
+        </field>
+      </field>
+    </record>
+
+    <!-- Account‑payment search (clearing code) -->
+    <record id="view_account_payment_search_inherit_lc_import" model="ir.ui.view">
+      <field name="name">account.payment.search.inherit.lc</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_search"/>
+      <field name="arch" type="xml">
+        <field name="journal_id" position="after">
+          <field name="clearing_code"/>
+        </field>
+      </field>
+    </record>
+
+  </data>
+</odoo>

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hudson_development_hudson_development,hudson_development.hudson_development,model_hudson_development_hudson_development,base.group_user,1,1,1,1
+access_stock_quant_backup,stock.quant.backup,model_stock_quant_backup,base.group_user,1,1,1,1
+access_confirmation_wizard,confirmation.wizard,model_confirmation_wizard,base.group_user,1,1,1,1

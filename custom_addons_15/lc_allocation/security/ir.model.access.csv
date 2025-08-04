@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_lc_allocation_lc_allocation,lc_allocation.lc_allocation,model_lc_allocation_lc_allocation,base.group_user,1,1,1,1

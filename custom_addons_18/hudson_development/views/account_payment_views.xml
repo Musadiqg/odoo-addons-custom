@@ -1,0 +1,22 @@
+<odoo>
+    <record id="view_account_payment_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Tax Journal Entries">
+                    <field name="tax_move_ids" nolabel="1">
+                        <tree>
+                            <field name="name" string="Journal Entry"/>
+                            <field name="date" string="Date"/>
+                            <field name="partner_id" string="Partner"/>
+                            <field name="amount_total" string="Total Amount"/>
+                            <field name="state" string="Status"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

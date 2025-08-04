@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+    <record id="seq_clearing_code_hudson" model="ir.sequence">
+        <field name="name">Clearing Code Hudson</field>
+        <field name="code">clearing.code.hudson</field>
+        <field name="prefix">HUD-</field>
+        <field name="padding">5</field>
+        <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        <field name="company_id" eval="False"/>
+    </record>
+
+     <record id="seq_clearing_code_inovita" model="ir.sequence">
+        <field name="name">Clearing Code Innovita</field>
+        <field name="code">clearing.code.innovita</field>
+        <field name="prefix">INN-</field>
+        <field name="padding">5</field>
+         <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    </data>
+</odoo>

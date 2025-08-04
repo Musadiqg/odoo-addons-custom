@@ -1,0 +1,156 @@
+<odoo>
+  <data>
+
+     <record id="view_stock_move_line_detailed_operation_tree_batch_no" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.inherit.tree.batch</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lot_id']" position="after">
+                <field name="picking_type_use_existing_lots" invisible="1"/>
+                <field name="supp_batch" force_save="1" attrs="{
+                    'column_invisible': [('parent.picking_type_code', '!=', 'incoming')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+       <record id="cron_set_reserve_revert" model="ir.cron">
+        <field name="name">Revert Reserve Qty: set stock quants</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="state">code</field>
+        <field name="code">model.revert_reserve()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">False</field>
+    </record>
+
+<!--      <record id="cron_set_batch_price" model="ir.cron">-->
+<!--        <field name="name">Batch: set Batch Price to SO from DC</field>-->
+<!--        <field name="model_id" ref="model_account_move"/>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">model._run_batch_price_cron()</field>-->
+<!--        <field name='interval_number'>1</field>-->
+<!--        <field name='interval_type'>days</field>-->
+<!--        <field name="numbercall">-1</field>-->
+<!--       <field name="active">False</field>-->
+<!--    </record>-->
+
+
+     <record id="cron_set_entries" model="ir.cron">
+        <field name="name">Moves: Adjust entries</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._run_adjust_entries_cron()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">False</field>
+    </record>
+
+
+
+    <record id="cron_set_fiscals" model="ir.cron">
+        <field name="name">Fiscal: set fiscal positions</field>
+        <field name="model_id" ref="model_account_fiscal_position"/>
+        <field name="state">code</field>
+        <field name="code">model._run_fiscal_cron()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">False</field>
+    </record>
+
+      <record id="cron_set_fiscals_customer" model="ir.cron">
+        <field name="name">Fiscal: set fiscal positions for customers</field>
+        <field name="model_id" ref="model_account_fiscal_position"/>
+        <field name="state">code</field>
+        <field name="code">model.set_fiscal_cron()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">False</field>
+    </record>
+<!--      <record id="cron_unreserve" model="ir.cron">-->
+<!--        <field name="name">UnReserve: set picking unreserve</field>-->
+<!--        <field name="model_id" ref="model_stock_quant"/>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">model._run_unreserve_cron()</field>-->
+<!--        <field name='interval_number'>1</field>-->
+<!--        <field name='interval_type'>days</field>-->
+<!--        <field name="numbercall">-1</field>-->
+<!--       <field name="active">False</field>-->
+<!--    </record>-->
+
+      <record id="cron_get_notify" model="ir.cron">
+        <field name="name">Notification: Send expiry alerts</field>
+        <field name="model_id" ref="model_stock_production_lot"/>
+        <field name="state">code</field>
+        <field name="code">model.send_expiry_notification()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">True</field>
+    </record>
+
+      <record id="cron_set_stock_quants_custom" model="ir.cron">
+        <field name="name">Stock Quants: Remove stock quants</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="state">code</field>
+        <field name="code">model._run_cron()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">False</field>
+    </record>
+
+      <record id="cron_set_unreserve_qty_id" model="ir.cron">
+        <field name="name">Unreserve Quants: </field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_set_reserve_qty()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">False</field>
+    </record>
+
+    <record id="payment_xlsx" model="ir.actions.report">
+        <field name="name">WHT Report XLSX</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_xlsx.partner_xlsx</field>
+        <field name="report_file">account_payment</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+    </record>
+
+      <record id="moves_xlsx" model="ir.actions.report">
+        <field name="name">SRB 100 % Sales Tax (Unregistered)</field>
+        <field name="model">account.move</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_xlsx.move_xlsx</field>
+        <field name="report_file">account_move</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+    </record>
+
+
+      <record id="confirmation_wizard_form" model="ir.ui.view">
+        <field name="name">confirmation.wizard.form</field>
+        <field name="model">confirmation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmation">
+                <group>
+                <field name="text"/>
+                <field name="name_move"/>
+                </group>
+                <footer>
+                    <button name="unreserve" type="object" string="Unreserve" class="oe_highlight" data-hotkey="q"/>
+                    <button special="cancel" data-hotkey="z" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+  </data>
+</odoo>

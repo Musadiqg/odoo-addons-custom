@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+    <record id="order_po_qty_xlsx" model="ir.actions.report">
+        <field name="name">Last Purchasing Report</field>
+        <field name="model">order.po.qty.report</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_xlsx.order_po_qty_xlsx</field>
+        <field name="report_file">stock_report_po_order_qty</field>
+        <field name="binding_model_id" ref="order_qty_report.model_order_po_qty_report"/>
+    </record>
+
+
+    <record id="order_qty_xlsx" model="ir.actions.report">
+        <field name="name">Stock Movement Report</field>
+        <field name="model">order.qty.report</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">report_xlsx.order_qty_xlsx</field>
+        <field name="report_file">stock_report_order_qty</field>
+        <field name="binding_model_id" ref="order_qty_report.model_order_qty_report"/>
+    </record>
+
+        <record id="order_po_qty_report_wizard_view_form" model="ir.ui.view">
+            <field name="name">order.po.qty.report.form</field>
+            <field name="model">order.po.qty.report</field>
+            <field name="arch" type="xml">
+                <form string="Last Purchasing  Report">
+                    <group>
+                        <group >
+<!--                            <field name="start_at"/>-->
+<!--                            <field name="end_date"/>-->
+<!--                            <field name="product_id" widget="many2many_tags" invisible="0"/>-->
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_pdf_report" type="object" string="Print XLS" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+       <record id="order_qty_report_wizard_view_form" model="ir.ui.view">
+            <field name="name">order.qty.report.form</field>
+            <field name="model">order.qty.report</field>
+            <field name="arch" type="xml">
+                <form string="Stock Movement Report">
+                    <group>
+                        <group >
+                            <field name="start_at"/>
+                            <field name="end_date"/>
+                            <field name="product_id" widget="many2many_tags" invisible="0"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="print_pdf_report" type="object" string="Print XLS" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+
+         <record id="action_product_order_qty_report" model="ir.actions.act_window">
+            <field name="name">Stock Movement Report</field>
+            <field name="res_model">order.qty.report</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_product_order_po_qty_report" model="ir.actions.act_window">
+            <field name="name">Last Purchasing Report</field>
+            <field name="res_model">order.po.qty.report</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+          <menuitem id="menu_order_qty_report"
+            action="action_product_order_qty_report"
+                    name="Stock Movement Report"
+            parent="stock.menu_warehouse_report" sequence="700"/>
+        <menuitem id="menu_order_po_qty_report"
+            action="action_product_order_po_qty_report"
+                    name="Last Purchasing Report"
+            parent="stock.menu_warehouse_report"/>
+    </data>
+</odoo>

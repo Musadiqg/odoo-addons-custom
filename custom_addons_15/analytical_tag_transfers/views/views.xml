@@ -1,0 +1,20 @@
+<odoo>
+  <data>
+
+    <record id="add_seller_in_stock_picking_form_formview_tags" model="ir.ui.view">
+            <field name="name">stock.picking.form.tags</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="location_dest_id" position="after">
+                    <field name="is_tag_trasnfer" invisible="1"/>
+                    <field name="analytic_tags" attrs="{'required':[('is_tag_trasnfer','!=',False)]}"/>
+                     <field name="analytic_account_id" attrs="{'required':[('is_tag_trasnfer','!=',False)]}"/>
+                </field>
+            </field>
+      </record>
+
+
+
+  </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="twilio_call_widget">
+        <div class="twilio-wrapper-class">
+            <div class="twilio-wrapper-class-img">
+                <img src="/conf_twilio/static/src/img/twilio-call.png" />
+            </div>
+        </div>
+    </t>
+</templates>

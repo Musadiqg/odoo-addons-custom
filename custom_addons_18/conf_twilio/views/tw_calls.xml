@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="tw_call_logs_form" model="ir.ui.view">
+        <field name="name">tw_call_logs_name</field>
+        <field name="model">tw.call.logs</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="call_start_time" readonly="1" />
+                            <field name="call_end_time" readonly="1" />
+                            <field name="call_direction" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="call_duraation" readonly="1" />
+                            <field name="call_price" readonly="1"/>
+                            <field name="caller_from_name" attrs="{'invisible':[('caller_from_name','=',False)]}" readonly="1"/>
+                            <field name="caller_to_name" attrs="{'invisible':[('caller_to_name','=',False)]}" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="recording_url" attrs="{'invisible':[('recording_url','=',False)]}" widget="url" readonly="1" />
+                        <field name="call_details_json" invisible="1" />
+                        <field name="recording_json" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="tw_call_logs_tree" model="ir.ui.view">
+        <field name="name">tw_call_logs_tree</field>
+        <field name="model">tw.call.logs</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="call_duraation" />
+                <field name="call_price"/>
+                <field name="caller_to_name"/>
+                <field name="caller_from_name" />
+                <field name="call_direction" />
+                <field name="create_date" />
+            </tree>
+        </field>
+    </record>
+    <record id="action_tw_call_logs" model="ir.actions.act_window">
+        <field name="name">Twilio Call Logs</field>
+        <field name="res_model">tw.call.logs</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_twilio_call_logs" name="Call Logs" action="action_tw_call_logs"
+        parent="twilio_base.menu_twilio_configuration" sequence="30"/>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-inherit="account.ShowPaymentInfo" t-inherit-mode="extension" owl="1">
+
+        <xpath expr="//a[@class='oe_form_field btn btn-secondary outstanding_credit_assign']" position="before">
+			<a title="partial reconcile"
+			   role="button"
+			   class="oe_form_field btn btn-link o_partial_button outstanding_credit_assign_partial"
+			   t-att-data-id="line.id"
+			   t-att-data-move_id="line.move_id"
+			   t-att-data-inv_id="my_inv"
+			   style="margin-right: -10px;"
+			   href="#"
+			   data-bs-toggle="tooltip"
+			   t-on-click="() => this.assignOutstandingCreditPartial(line.id)">Partial Pay</a>
+
+        </xpath>
+    </t>
+</templates>

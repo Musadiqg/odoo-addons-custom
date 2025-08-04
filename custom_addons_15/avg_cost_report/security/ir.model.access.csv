@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_avg_cost_report_avg_cost_report,avg_cost_report.avg_cost_report,model_avg_cost_report_avg_cost_report,base.group_user,1,1,1,1
+access_stock_report_weighted,stock.report.weighted,model_stock_report_weighted,base.group_user,1,1,1,1

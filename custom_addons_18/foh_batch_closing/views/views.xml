@@ -1,0 +1,128 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="closing_list">
+            <field name="name">FOH Batch Closing Form</field>
+            <field name="model">batch.closing</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="applied_for"/>
+                    <field name="company_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="closing_form">
+            <field name="name">FOH Batch Closing Form</field>
+            <field name="model">batch.closing</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="COMPUTE" invisible="state != 'draft'" class="oe_highlight" name="button_post" type="object"/>
+                        <button string="Validate" invisible="state != 'todo'" class="oe_highlight" name="button_validate" type="object"/>
+                        <button string="Reset to Draft" invisible="state != 'close'" class="oe_highlight" name="btn_reset_to_draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,todo,close" nolabel="1" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_get_foh_product" class="oe_stat_button" icon="fa-refresh" type="object">
+                                <field name="product_count" widget="statinfo" string="FOH Rate"/>
+                            </button>
+                            <button name="action_get_units" class="oe_stat_button" icon="fa-cubes" type="object">
+                                <field name="units_count" widget="statinfo" string="MFG Lines"/>
+                            </button>
+                            <button name="action_get_lines_view" class="oe_stat_button" icon="fa-usd" type="object">
+                                <field name="items_count" widget="statinfo" string="Journal Items"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <label for="month" string="COMPUTE FOR :" id="label_dates"/>
+                                <div>
+                                    <div class="o_row o_row_readonly">
+                                        <strong><span class="oe_inline">Month :</span></strong>
+                                        <field name="month" class="oe_inline" nolabel="1"/>
+                                        <strong><span class="oe_inline">Year :</span></strong>
+                                        <field name="current_year" class="oe_inline"/>
+                                    </div>
+                                </div>
+                                <field name="total_debit"/>
+                                <field name="total_credit"/>
+                                <field name="active_foh"/>
+                            </group>
+                            <group>
+                                <label for="applied_for" string="APPLIED FOR :" id="label_dates1"/>
+                                <div>
+                                    <div class="o_row o_row_readonly">
+                                        <strong><span class="oe_inline">Month :</span></strong>
+                                        <field name="applied_for" class="oe_inline" nolabel="1"/>
+                                        <strong><span class="oe_inline">Year :</span></strong>
+                                        <field name="current_year" class="oe_inline"/>
+                                    </div>
+                                </div>
+                                <field name="total_balance"/>
+                                <field name="total_units"/>
+                                <field name="rate"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <label for="description" class="oe_edit_only"/>
+                        <field name="description" string="Narration"/>
+                        <field name="date_from" invisible="1"/>
+                        <field name="date_to" invisible="1"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="closing_list_coa">
+            <field name="name">FOH Batch Closing COA List</field>
+            <field name="model">batch.closing.coa</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="coas" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="closing_form_coa">
+            <field name="name">FOH Batch Closing COA</field>
+            <field name="model">batch.closing.coa</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="coas"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="foh_batch_closing.action_window">
+            <field name="name">FOH Batch Closing window</field>
+            <field name="res_model">batch.closing</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="foh_batch_closing.action_window1">
+            <field name="name">FOH Batch Closing COAs</field>
+            <field name="res_model">batch.closing.coa</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Batch Closing Setup" id="foh_batch_closing.menu_1_list" parent="account.menu_finance_entries"/>
+        <menuitem name="FOH Batch Closing" id="foh_batch_closing.menu_1_list_main_x" parent="foh_batch_closing.menu_1_list" action="foh_batch_closing.action_window"/>
+        <menuitem name="FOH COAa" id="foh_batch_closing.menu_1_list_main" parent="foh_batch_closing.menu_1_list" action="foh_batch_closing.action_window1"/>
+    </data>
+</odoo>

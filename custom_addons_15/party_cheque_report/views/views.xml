@@ -1,0 +1,14 @@
+<odoo>
+  <data>
+   <record id="view_account_form_asset_inherit_hudson_two" model="ir.ui.view">
+        <field name="name">account.account.form.hudson.two</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allowed_journal_ids']" position="after">
+                <field name="is_srb_account_20" invisible="0"/>
+            </xpath>
+        </field>
+        </record>
+  </data>
+</odoo>

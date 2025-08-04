@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<t name="100 Miles Template" t-name="professional_templates.SO_13_document">
+						<!-- Multicompany -->
+						<t t-if="doc and 'company_id' in doc">
+								<t t-set="company" t-value="doc.company_id"/>
+						</t>
+						<t t-if="not doc or not 'company_id' in doc">
+								<t t-set="company" t-value="res_company"/>
+						</t>
+						<div class="header col-12 float-left" t-attf-style="padding-left:0px; padding-right:0px; color:{{style.text_color}};font-size:{{int(style.header_font)}}px;font-family:{{style.font_family}};border-bottom:1px solid {{style.theme_color}}">
+								<t t-if="style.header">
+										<div class="col-4 float-left" style="padding-left:0px;">
+												<span t-if="style.logo">
+														<span itemprop="image" t-field="style.logo" t-options="{&quot;widget&quot;: &quot;image&quot;}"/>
+												</span>
+										</div>
+										<div class="col-4 float-left text-center" style="padding-left:0px;">
+												<h4 t-field="doc.project_title" t-attf-style="background-color:{{style.theme_color}};color:{{style.theme_txt_color}};"/>
+										</div>
+										<div class="col-4 mb8 float-right" style="padding-bottom:2px;padding-right:0px;">
+												<div class="float-right" style="width:auto;padding-left:15px;">
+														<t t-call="professional_templates.company_address"/>
+												</div>
+										</div>
+								</t>
+						</div>
+						<div class="article page" t-attf-style="color:{{style.text_color}} !important;font-size:{{int(style.body_font)}}px !important;font-family:{{style.font_family}} !important;">
+								<div class="col-12 float-left" t-attf-style="padding-left:0px; padding-right:0px;border-bottom:1px solid {{style.theme_color}};"><!--start of wrapper -->
+										<div class="col-7 float-left mt8">
+												<div t-attf-style="display:inline;width:auto;padding:4px; color:{{style.theme_color}};font-size:{{int(style.body_font)+2}}px;font-weight:bold;">
+														<span><span class="fa fa-file-text-o"/> Invoice To:</span>
+												</div>
+												<address t-field="doc.partner_id" style="margin-bottom:0px;" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;, &quot;phone&quot;,  &quot;email&quot;, &quot;website&quot;], &quot;no_marker&quot;: false}"/>
+												<span t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></span>
+										</div>
+										<div class="col-5 mt8 mb8 float-right" t-attf-style="background-color:{{style.theme_color}}; color:{{style.theme_txt_color}};">
+												<h3 id="invoice_title" class="mt4 mb4">
+														<t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+																<span t-if="doc.state not in ['draft','sent']">Order No:</span>
+																<span t-if="doc.state in ['draft','sent']">Quotation No:</span>
+														</t>
+														<t t-if="env.context.get('proforma', False) or is_pro_forma">
+																<span>Pro-Forma Invoice # </span>
+														</t>
+														<span t-field="doc.name"/>
+												</h3>
+										</div>
+										<div class="col-5 mt8 mb8 float-right" t-attf-style="background-color:{{style.theme_color}}; color:{{style.theme_txt_color}};padding:15px;">
+												<t t-set="div_style" t-value="'color:{};font-size:{}px; width:100%;'.format(style.theme_txt_color,int(style.body_font)+2)"/>
+												<div t-if="doc.date_order" t-attf-style="{{div_style}}">
+														<strong t-if="doc.state not in ['draft','sent']" style="white-space:nowrap;">Order Date:</strong>
+														<strong t-if="doc.state in ['draft','sent']" style="white-space:nowrap;">Quotation Date:</strong>
+														<span t-field="doc.date_order"/>
+												</div>
+												<div t-if="doc.state in ['draft','sent'] and doc.validity_date" t-attf-style="{{div_style}}">
+														<strong style="white-space:nowrap;">Expiry Date:</strong>
+														<span t-field="doc.validity_date"/>
+												</div>
+												<div t-if="doc.sudo().user_id" t-attf-style="{{div_style}}">
+														<strong style="white-space:nowrap;">Salesperson:</strong>
+														<span t-field="doc.sudo().user_id"/>
+												</div>
+												<div t-if="doc.fiscal_position_id" t-attf-style="{{div_style}}">
+														<strong style="white-space:nowrap;">Fiscal Position:</strong>
+														<span t-field="doc.fiscal_position_id"/>
+												</div>
+												<div t-if="doc.client_order_ref" t-attf-style="{{div_style}}">
+														<strong style="white-space:nowrap;">Client Reference:</strong>
+														<span t-field="doc.client_order_ref"/>
+												</div>
+										</div>
+										<div class="col-7 float-left mt8" t-if="doc.partner_shipping_id and doc.partner_shipping_id != doc.partner_id">
+												<div class="mt8" t-attf-style="display:inline;width:auto;padding:4px; color:{{style.theme_color}};font-size:{{int(style.body_font)+2}}px;font-weight:bold;">
+														<span>
+																<span class="fa fa-truck "/> Ship To:
+														</span>
+												</div>
+												<address t-field="doc.partner_shipping_id" style="margin-bottom:0px; margin-top:4px;" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;, &quot;address&quot;, &quot;phone&quot;,  &quot;email&quot;, &quot;website&quot;], &quot;no_marker&quot;: false}"/>
+												<span t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></span>
+										</div>
+								</div> <!--end of wrapper2-->
+								<!-- DATA-->
+								<t t-call="professional_templates.order_lines"/>
+								<p style="page-break-after:always"></p>
+									<div class="mt8" t-attf-style="display:inline;width:auto;padding:4px; color:{{style.text_color}};font-size:{{int(style.body_font)-1}}px;font-weight:bold;">
+									<span>
+									<h5>Project Assumptions:</h5> 
+                  <li>Assumes that there are no watercourse crossings that are not permitted</li>
+                  <li>Assumes that site is suitably clear and that no clearing is required (no chainsaws), unless otherwise specified above.</li>
+                  <li>Assumes site can be reached by unassisted pickup truck pulling trailer.</li>
+                  <li>No helicopter use is planned, helicopter costs if required would have to be approved by client and additional costs would be incurred </li>
+                  <br></br><br></br>
+                  <h5>Not included in quote (unless otherwise indicated in quote): </h5>
+                  <li>Any site clearing or staging area brush or tree clearing.</li>
+                  <li>Snow removal to access the site or to work on the site as SWS requires</li>
+                  <li>Fencing around the unit is not included.</li>
+                  <li>Any helicopter or associated helicopter costs (not anticipated at this time).</li>
+                  <li>Any local labour costs if local labour requirements are specified by client.</li>
+                  <li>Any wear and tear, washouts, ruts, damage to roads or fencing as a result of required site access to complete the work. Sentrex will make reasonable efforts to minimize disturbance and/or damage to the land</li>
+                  <li>Unless otherwise specified in the scope of work above, for client owned equipment, any communications account setup or communication charges, or post installation site visits are not included and will be invoiced separately.</li>	
+                  <li>Delays caused by others or weather, including severe winter conditions, will be an additional charge.</li>
+                  <li>All taxes are additional charges</li>
+                  <li>Vandalism, damage due to misuse or improper maintenance by client or its agents, or theft from site is responsibility of client. </li>
+                  <br></br><br></br>
+                  <h5>Client to provide:</h5>
+                  <li>Aeronautical and municipal permits (if so required)</li>
+                  <li>Free and clear access to sites</li>
+                  <li>Coordination with landowner/site manager</li>
+                  <li>Insurance on unit while on client’s site.</li>
+                  <br></br><br></br>
+                  <h5>Proposed Schedule:</h5>
+                  <li>End of August</li>
+                  <br></br><br></br>
+									<h5>Standard Assumptions, exceptions, and notes on scope of work:</h5>
+                  <li>Site or staging area(s) access must be suitable for unassisted standard pickup truck with long trailer</li>
+                  <li>Non-winter conditions have been assumed (unless otherwise stated)</li>
+                  <li>All permitting is responsibility of client, and quote assumes all necessary permits and approvals for construction and operation are in place, including landowner, municipal, provincial, and federal approvals.</li> 
+                  <li>Provision of access to the site is responsibility of client. Client to provide GPS coordinates for tower base and/or unit location and is to provide coordination with landowners.</li>
+                  <li>If site is in grazing or pasture land, animals are to be removed from the field during installation, and it is mandatory that fencing should be put in place after installation. Client is responsible for domestic or wild animal damage to equipment at any time.</li>
+                  <li>A single mobilization/ demob is assumed unless otherwise stated in the quote</li>
+                  <li>Once SWS has started work, continuous work is assumed and any delays caused by instrument shipping, change order waits, weather or any other delays not the fault of SWS will be charged to the client at our stated rates. SWS will advise client as soon as reasonably possible if delays are anticipated, and will re-arrange site work as reasonably possible in order to minimize delay times</li>
+                  <li>Person1: $130/hr (min. 8hrs/day)</li>
+
+							</span>
+					</div>
+					<p style="page-break-after:always"></p>
+					<div class="mt8" t-attf-style="display:inline;width:auto;padding:4px; color:{{style.text_color}};font-size:{{int(style.body_font)-1}}px;font-weight:bold;">
+							<span>			
+									<h3>Payment:</h3>
+                  Invoicing will be as follows: 
+                  <li>First invoice, on notice to proceed, 2-month rental amount plus installation price</li>
+                  <li>Second and subsequent invoices, every 2 months in advance until 45 days termination notice is provided by client</li>
+                  <li>Additional invoices if and as changes/ delays were required</li>
+                  
+                  Payment is due upon invoicing. Other invoices must be paid and funds received within 30 days of invoice or late payment fees of 2% per month will be charged. All applicable taxes extra to the invoiced amounts.
+                  <br></br>
+                  I am authorized to sign for the indicated party, and I agree to the above pricing, terms and conditions and payment schedule signed today August __, 2021 by:
+                  <br></br>
+                  _______________________________
+                  <br></br>Client - Authorized signature
+                  <br></br>
+                  _________________________
+                  <br></br>Paul Woodhouse - Authorized signature - Sentrex Wind Services Inc.
+
+							</span>
+					</div>
+						</div><!--End of PAGE-->
+						<!--FOOTER -->
+						<div class="footer" t-attf-style="font-size:{{style.footer_font}}px !important;font-family:{{style.font_family}} !important;">
+								<t t-call="professional_templates.company_footer"/>
+						</div>
+						
+						<!--/FOOTER-->
+				</t>
+		

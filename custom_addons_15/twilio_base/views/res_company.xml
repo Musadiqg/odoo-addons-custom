@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_twilio_base_company_form" model="ir.ui.view">
+        <field name="name">view_twilio_base_company_form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <group position="inside">
+                <group name="twilio" string="Twilio">
+                    <field name="twilio_account_sid"/>
+                    <field name="twilio_auth_token" password="True" />
+                    <field name="twilio_api_key" />
+                    <field name="twilio_api_secret" password="True" />
+                    <field name="twilio_outgoing_application_sid" />
+                    <field name="twilio_number_id" />
+                    <field name="balance_account" />
+                    <button name="retrieve_phone_numbers" type="object" string="Retrieve Twilio Numbers" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

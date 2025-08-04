@@ -1,0 +1,16 @@
+<odoo>
+  <data>
+
+       <record id="cron_set_new_taxes" model="ir.cron">
+        <field name="name">Taxes: set new taxes in Fiscals</field>
+        <field name="model_id" ref="model_account_account"/>
+        <field name="state">code</field>
+        <field name="code">model.set_tax_()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+       <field name="active">False</field>
+    </record>
+
+  </data>
+</odoo>

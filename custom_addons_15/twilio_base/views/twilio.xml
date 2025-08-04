@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_twilio_base_keys_form" model="ir.ui.view">
+        <field name="name">view_twilio_base_keys_form</field>
+        <field name="model">twilio.api.key</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="sid" />
+                    <field name="secret" password="True" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_twilio_base_phone_numbers_form" model="ir.ui.view">
+        <field name="name">view_twilio_base_phone_numbers_form</field>
+        <field name="model">twilio.phone.number</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="phone_number" />
+                    <field name="sms_enabled" />
+                    <field name="voice_enabled" />
+                    <field name="whatsapp_enabled" />
+                    <field name="sid" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_twilio_base_usage_form" model="ir.ui.view">
+        <field name="name">view_twilio_base_usage_form</field>
+        <field name="model">twilio.usage</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="start_date" />
+                    <field name="end_date" />
+                    <field name="price" />
+                    <field name="price_unit" />
+                    <field name="usage" />
+                    <field name="usage_unit" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_twilio_keys" model="ir.actions.act_window">
+        <field name="name">Twilio Keys</field>
+        <field name="res_model">twilio.api.key</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_twilio_phone_numbers" model="ir.actions.act_window">
+        <field name="name">Twilio Phone Numbers</field>
+        <field name="res_model">twilio.phone.number</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_twilio_usage" model="ir.actions.act_window">
+        <field name="name">Twilio Usage</field>
+        <field name="res_model">twilio.usage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_twilio"
+        name="Twilio"
+        web_icon="twilio_base,static/description/icon.png"
+        sequence="10"/>
+
+    <menuitem id="menu_twilio_configuration"
+        name="Configuration"
+        parent="menu_twilio"
+        sequence="100"/>
+
+    <menuitem id="menu_twilio_keys"
+        name="Api Keys"
+        action="action_twilio_keys"
+        parent="menu_twilio_configuration"
+        sequence="10"/>
+
+    <menuitem id="menu_twilio_phone_numbers"
+        name="Api Phone Numbers"
+        action="action_twilio_phone_numbers"
+        parent="menu_twilio_configuration"
+        sequence="20"/>
+
+    <menuitem id="menu_twilio_usage"
+        name="Twilio Usage"
+        action="action_twilio_usage"
+        parent="menu_twilio_configuration"
+        sequence="30"/>
+
+</odoo>

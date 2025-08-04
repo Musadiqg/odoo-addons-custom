@@ -1,0 +1,32 @@
+<odoo>
+  <data>
+    <record id='view_landed_costs_form_allocation' model='ir.ui.view'>
+        <field name="name">mrp.landed.cost.form.allocation</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+        <field name="arch" type="xml">
+            <field name="picking_ids" position="before">
+                <field name="clearing_code" options="{'no_create': False, 'no_open': True}"/>
+            </field>
+            <field name="vendor_bill_id" position="replace">
+                <field name="vendor_bill_ids" widget="many2many_tags"/>
+            </field>
+            <field name="picking_ids" position="attributes">
+                <attribute name="domain">[('company_id', '=', company_id),('picking_type_id.code','=','internal'),('move_ids.stock_valuation_layer_ids', '!=', False)]</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_move_form_landed_cost" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']//field[@name='name']" position="after">
+                <field name='landed_cost' force_save="1"/>
+                <field name='release_num'/>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

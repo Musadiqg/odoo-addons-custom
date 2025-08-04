@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+      <template id="report_party_cheque">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <style>
+                                th,
+                                td {
+                                    padding: 5px !important;
+                                    font-size: 13px;
+                                }
+
+                                .mb64 {
+                                    margin-bottom: 64px !important
+                                }
+
+                                .mt96 {
+                                    margin-top: 96px !important
+                                }
+                            </style>
+                            <h2>
+                                <span>Party Cheque Details</span>
+                            </h2>
+
+                            <table class="table table-condensed" name="invoice_line_table">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Bill No</th>
+                                        <th>Bill Date </th>
+                                        <th>Vendor Bill #</th>
+                                        <th>Payment Voucher #</th>
+                                        <th>Cheque #</th>
+                                        <th>Vendor Name</th>
+                                        <th>Invoice Amount</th>
+                                        <th>ST W Rate %</th>
+                                        <th>Sales Tax W-HOLD</th>
+                                        <th>ITW Rate %</th>
+                                        <th>Income Tax W.Hold</th>
+                                        <th>Net Payment</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="invoice_tbody">
+                                    <t t-set="cnt" t-value="0" />
+                                    <t t-set="total_invoice_amount" t-value="0" />
+                                    <t t-set="total_sales_tax" t-value="0" />
+                                    <t t-set="total_income_tax" t-value="0" />
+                                    <t t-set="total_net_income" t-value="0" />
+                                    <tr t-foreach="o.reconciled_bill_ids" t-as="l">
+                                        <t t-set="cnt" t-value="cnt+1" />
+                                        <td class="text-left">
+                                            <span t-esc="cnt"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.ref" />
+                                        </td>
+                                        <td>
+                                            <span t-field="l.invoice_date" />
+                                        </td>
+                                        <td>
+                                            <span t-field="l.name" />
+                                        </td>
+                                        <td>
+                                            <span t-field="o.name" />
+                                        </td>
+                                        <td>
+                                            <span t-field="o.check_number" />
+                                        </td>
+                                        <td>
+                                            <span t-field="o.partner_id.display_name"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="l.amount_total"/>
+                                            <t t-set="total_invoice_amount" t-value="total_invoice_amount + l.amount_total"/>
+
+                                        </td>
+                                        <td>
+                                            <t t-set="is_srb" t-value="o.x_studio_with_holding_tax.invoice_line_ids.filtered(lambda x: x.account_id.is_srb_account_20)"/>
+                                            <t t-if="is_srb">
+                                                <span>20</span>
+                                            </t>
+                                            <t t-if="not is_srb">
+                                                <span>0</span>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <span t-esc="abs(sum(o.x_studio_with_holding_tax.invoice_line_ids.filtered(lambda x: x.account_id.is_srb_account_20).mapped('balance')))"/>
+<!--                                            <span>-</span>-->
+                                            <t t-set="total_sales_tax" t-value="total_sales_tax + abs(sum(o.x_studio_with_holding_tax.invoice_line_ids.filtered(lambda x: x.account_id.is_srb_account_20).mapped('balance')))"/>
+                                        </td>
+                                        <td>
+                                            <t t-set="taxes" t-value="o.partner_id.x_studio_wht_position.tax_ids"/>
+                                            <t t-set="income_tax" t-value="taxes"/>
+                                            <t t-foreach="taxes" t-as="income_tax">
+                                                <t t-if=" 'Income' in income_tax.tax_dest_id.name">
+                                                    <span t-esc="income_tax.x_studio_field_NJLfU"/>
+                                                </t>
+                                            </t>
+
+                                        </td>
+                                        <td>
+                                            <span t-esc="abs(sum(o.x_studio_with_holding_tax.invoice_line_ids.filtered(lambda x: x.account_id.is_wht_account).mapped('balance')))"/>
+<!--                                            <span>-</span>-->
+                                            <t t-set="total_income_tax" t-value="total_income_tax +  abs(sum(o.x_studio_with_holding_tax.invoice_line_ids.filtered(lambda x: x.account_id.is_wht_account).mapped('balance')))"/>
+                                        </td>
+                                        <td>
+                                            <t t-set="taxes" t-value="abs(sum(o.x_studio_with_holding_tax.invoice_line_ids.filtered(lambda x: x.account_id.is_srb_account_20).mapped('balance')))+abs(sum(o.x_studio_with_holding_tax.invoice_line_ids.filtered(lambda x: x.account_id.is_wht_account).mapped('balance')))"/>
+
+                                            <span t-esc="l.amount_total - taxes"/>
+                                             <t t-set="total_net_income" t-value="total_net_income + l.amount_total - taxes "/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <strong>
+                                                <span t-esc="round(total_invoice_amount,2)"/>
+                                            </strong>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <strong>
+                                                <span t-esc="round(total_sales_tax,2)"/>
+                                            </strong>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <strong>
+                                                <span t-esc="round(total_income_tax,2)"/>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                <span t-esc="round(total_net_income,2)"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+</template>
+</odoo>

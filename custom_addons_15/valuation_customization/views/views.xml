@@ -1,0 +1,25 @@
+<odoo>
+  <data>
+      <record id="stock_valuation_layer_tree_avco" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.tree</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_account.stock_valuation_layer_tree"/>
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='value']" position="after">
+                <field name="x_value"/>
+            </xpath>
+        </field>
+        </record>
+
+      <record id="view_tax_form_inherit_l10n_in_custom" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.custom</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="is_base_affected" position="after">
+                <field name="is_import"/>
+            </field>
+        </field>
+    </record>
+  </data>
+</odoo>

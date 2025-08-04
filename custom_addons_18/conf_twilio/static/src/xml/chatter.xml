@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="conf_twilio.tw_call_alert" owl="1">
+        <div class="tw-incoming-call-alert">
+            <div class="incoming-call-alert-wraper">
+                <div class="twilio-incoming-caller-details">
+                    <div class="twilio-incoming-caller-name">
+                        Caller Name
+                    </div>
+                    <div class="twilio-incoming-caller-number">
+                        +923216211109
+                    </div>
+                </div>
+                <div class="twilio-incoming-answer" t-on-click="_onClickTwIncomingAnswer">Answer</div>
+                <div class="twilio-incoming-reject" t-on-click="_onClickTwIncomingReject">Reject</div>
+            </div>
+        </div>
+    </t>
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_Composer_coreMain')]" position="after">
+            <div class="twilio-module-footer">
+                <div class="twilio-success-connect-msg">Twilio Connected Successfully</div>
+                <div class="twilio-error-connect-msg"></div>
+                <div class="twilio-calling">
+                    <div class="twilio-calling-to">Calling to: Stark (+923216211109) .....<span class="twilio-connected">Connected</span></div>
+                    <div class="twilio-send-digit-dialpad">
+                        <div class="send-digit" tnumber="1" t-on-click="_onCallSendDigit">1</div>
+                        <div class="send-digit" tnumber="2" t-on-click="_onCallSendDigit">2</div>
+                        <div class="send-digit" tnumber="3" t-on-click="_onCallSendDigit">3</div>
+                        <div class="send-digit" tnumber="4" t-on-click="_onCallSendDigit">4</div>
+                        <div class="send-digit" tnumber="5" t-on-click="_onCallSendDigit">5</div>
+                        <div class="send-digit" tnumber="6" t-on-click="_onCallSendDigit">6</div>
+                        <div class="send-digit" tnumber="7" t-on-click="_onCallSendDigit">7</div>
+                        <div class="send-digit" tnumber="8" t-on-click="_onCallSendDigit">8</div>
+                        <div class="send-digit" tnumber="*" t-on-click="_onCallSendDigit">*</div>
+                        <div class="send-digit" tnumber="9" t-on-click="_onCallSendDigit">9</div>
+                        <div class="send-digit" tnumber="0" t-on-click="_onCallSendDigit">0</div>
+                        <div class="send-digit" tnumber="#" t-on-click="_onCallSendDigit">#</div>
+                    </div>
+                    <div class="buttons-wrapper">
+                        <div class="twilio-open-dialpad" t-on-click="_onClickToggleDialPad"><i class="fa fa-th" /></div>
+                        <div class="twilio-hangup" t-on-click="_onClickDisconnectTwilio">Hang Up</div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//*[hasclass('o_Composer_primaryToolButtons')]" position="inside">
+            <div class="twilio-chatter-call-icon" t-on-click="_onClickCallTwilio">
+                <img src="/conf_twilio/static/src/img/twilio-call.png" />
+            </div>
+        </xpath>
+    </t>
+</templates>

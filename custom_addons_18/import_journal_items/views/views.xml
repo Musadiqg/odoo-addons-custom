@@ -1,0 +1,34 @@
+<odoo>
+  <data>
+    <record id="wizard_form" model="ir.ui.view">
+        <field name="name">sale.discount.graduity.wizard.form</field>
+        <field name="model">so.import.wizard</field>
+        <field name="arch" type="xml">
+          <form string="Import Journal Items">
+            <group>
+                <field name="data"/>
+            </group>
+            <footer>
+                <button name="load_data" string="Load" type="object" default_focus="1" class="oe_highlight"/>
+            </footer>
+          </form>
+        </field>
+        </record>
+
+      <record model="ir.actions.act_window" id="sale_order_import_action">
+              <field name="name">Import Journal Items</field>
+              <field name="res_model">so.import.wizard</field>
+              <field name="view_id" ref="wizard_form"/>
+                <field name="binding_view_types">form</field>
+                <field name="view_mode">form</field>
+                <field name="target">new</field>
+            </record>
+
+       <menuitem
+              id="sale_order_import"
+              action="sale_order_import_action"
+              parent="account.menu_account_config" sequence="3"
+              name="Import Journal Items"
+      />
+  </data>
+</odoo>
